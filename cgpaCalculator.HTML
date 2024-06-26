@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CGPA Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: url('images/blue\ night.jpg') no-repeat center center fixed;
+            background-size: cover;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: rgb(0, 0, 0);
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.553);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+            
+        }
+        h1 {
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            text-align: center;
+            color: #000000;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .form-group input {
+            padding: 10px;
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #000000;
+            border-radius: 5px;
+        }
+        .form-group button {
+            padding: 10px 20px;
+            width: 100%;
+            border: none;
+            border-radius: 5px;
+            background-color: #0079fb;
+            color: rgb(229, 234, 251);
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .form-group button:hover {
+            background-color: #0053ab;
+        }
+        .course-inputs {
+            margin-top: 20px;
+        }
+        .course-inputs .course-group {
+            margin-bottom: 15px;
+        }
+        .course-group input {
+            margin-bottom: 10px;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 1.2em;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CGPA Calculator</h1>
+        <div class="form-group">
+            <label for="numCourses">Enter the total number of courses:</label>
+            <input type="number" id="numCourses" min="1" required>
+            <button onclick="generateCourseInputs()">Submit</button>
+        </div>
+        <form id="courseForm" onsubmit="calculateCGPA(event)">
+            <div id="courseInputs" class="course-inputs"></div>
+            <button type="submit">Calculate CGPA</button>
+        </form>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function generateCourseInputs() {
+            const numCourses = document.getElementById('numCourses').value;
+            const courseInputs = document.getElementById('courseInputs');
+            courseInputs.innerHTML = ''; 
+
+            for (let i = 0; i < numCourses; i++) {
+                const courseGroup = document.createElement('div');
+                courseGroup.className = 'course-group';
+
+                const courseNameInput = document.createElement('input');
+                courseNameInput.type = 'text';
+                courseNameInput.placeholder = 'Course Code';
+                courseNameInput.required = true;
+                courseGroup.appendChild(courseNameInput);
+
+                const courseGradeInput = document.createElement('input');
+                courseGradeInput.type = 'number';
+                courseGradeInput.placeholder = 'Grade';
+                courseGradeInput.min = 0;
+                courseGradeInput.max = 10;
+                courseGradeInput.step = 0.1;
+                courseGradeInput.required = true;
+                courseGroup.appendChild(courseGradeInput);
+
+                const courseCreditInput = document.createElement('input');
+                courseCreditInput.type = 'number';
+                courseCreditInput.placeholder = 'Credits';
+                courseCreditInput.min = 1;
+                courseCreditInput.required = true;
+                courseGroup.appendChild(courseCreditInput);
+
+                courseInputs.appendChild(courseGroup);
+            }
+
+            document.getElementById('courseForm').style.display = 'block';
+        }
+
+        function calculateCGPA(event) {
+            event.preventDefault();
+            const courseInputs = document.getElementById('courseInputs').children;
+            let totalCredits = 0;
+            let weightedSum = 0;
+
+            for (let courseGroup of courseInputs) {
+                const courseCode = courseGroup.children[0].value.toUpperCase();
+                const grade = parseFloat(courseGroup.children[1].value);
+                const credit = parseFloat(courseGroup.children[2].value);
+
+                totalCredits += credit;
+                weightedSum += credit * grade;
+            }
+
+            const cgpa = weightedSum / totalCredits;
+            document.getElementById('result').innerText = `Your CGPA is: ${cgpa.toFixed(2)}`;
+        }
+    </script>
+</body>
+</html>
